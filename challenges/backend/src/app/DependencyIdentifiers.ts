@@ -1,3 +1,4 @@
 export const DependencyIdentifier = {
-    LOGGER: "logger"
+    LOGGER: "logger",
+    AUTH_SERVICE: "authService"
 };
