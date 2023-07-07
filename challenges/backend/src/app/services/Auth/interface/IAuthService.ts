@@ -1,5 +1,5 @@
 export type AuthTokenResult = {
-  userId: string;
+  userid: string;
   token:string;
 }
 

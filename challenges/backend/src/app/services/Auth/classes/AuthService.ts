@@ -24,11 +24,8 @@ export class AuthService implements IAuthService {
       })
     });
 
-    console.log(res);
-    
+    const {userid, token} = (await res.json()) as AuthTokenResult;
 
-    const {userId, token} = (await res.json()) as AuthTokenResult;
-
-    return {userId, token};
+    return {userid, token};
   }
 }
