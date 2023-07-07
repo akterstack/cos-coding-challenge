@@ -1,10 +1,10 @@
 import { injectable } from 'inversify';
 import fetch from 'node-fetch';
-import { IAuthService, AuthTokenResult } from './../interface/IAuthService';
+import { IAuthService, AuthCredential } from './../interface/IAuthService';
 
 @injectable()
 export class AuthService implements IAuthService {
-  async authenticate(username: string, password: string): Promise<AuthTokenResult> {
+  async authenticate(username: string, password: string): Promise<AuthCredential> {
     if (!process.env.API_BASE_URL) {
       throw new Error(`Environment variable missing: API_BASE_URL`);
     }
@@ -19,13 +19,16 @@ export class AuthService implements IAuthService {
 
     const res = await fetch(`${process.env.API_BASE_URL}/v1/authentication/${username}`, {
       method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         password
       })
     });
 
-    const {userid, token} = (await res.json()) as AuthTokenResult;
+    const {userId, token} = (await res.json()) as AuthCredential;
 
-    return {userid, token};
+    return {userId, token};
   }
 }

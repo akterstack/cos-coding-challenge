@@ -1,8 +1,8 @@
-export type AuthTokenResult = {
-  userid: string;
+export type AuthCredential = {
+  userId: string;
   token:string;
 }
 
 export interface IAuthService {
-  authenticate(username: string, password: string): Promise<AuthTokenResult>;
+  authenticate(username: string, password: string): Promise<AuthCredential>;
 }

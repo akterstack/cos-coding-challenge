@@ -14,18 +14,23 @@ describe('AuthService', () => {
 
   describe('#authenticate()', () => {
     it('should throw error if env.API_BASE_URL is missing.', async () => {
-      expect(authService.authenticate('user', 'pass')).to.eventually.throw('Environment variable missing: API_BASE_URL')
+      const baseUrl = process.env.API_BASE_URL;
+      process.env.API_BASE_URL = '';
+      await expect(authService.authenticate('user', 'pass')).to.be.eventually.rejected.and.has.property('message', 'Environment variable missing: API_BASE_URL');
+      process.env.API_BASE_URL = baseUrl;
     })
+
     it('should throw error if username is empty.', async () => {
-      expect(authService.authenticate('', 'pass')).to.eventually.throw('Username must be provided for authentication.')
+      await expect(authService.authenticate('', 'pass')).to.be.eventually.rejected.and.has.property('message', 'Username must be provided for authentication.');
     })
+
     it('should throw error if password is empty.', async () => {
-      expect(authService.authenticate('user', '')).to.eventually.throw('Password must be provided for authentication.')
+      await expect(authService.authenticate('user', '')).to.be.eventually.rejected.and.has.property('message', 'Password must be provided for authentication.');
     })
 
     const username = 'mock_user';
     const password = 'mock_pass';
-    const authCreds = {
+    const authCred = {
       userid: 'mock_userid',
       token: 'mock_token'
     }
@@ -35,13 +40,13 @@ describe('AuthService', () => {
       nock(process.env.API_BASE_URL)
         .persist()
         .put(`/v1/authentication/${username}`, { password })
-        .reply(200, authCreds);
+        .reply(200, authCred);
     })
 
     it('should return token and userid', async () => {
-        const authCreds = await authService.authenticate(username, password);
-        expect(authCreds).to.have.property('userid')
-        expect(authCreds).to.have.property('token')
+        const authCred = await authService.authenticate(username, password);
+        expect(authCred).to.have.property('userId')
+        expect(authCred).to.have.property('token')
     })
 
     after(() => {
