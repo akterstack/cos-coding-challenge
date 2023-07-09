@@ -1,3 +1,3 @@
 describe('CarOnSaleClient', () => {
-  it('Should run test', () => {})
-})
+  it('Should run test', () => {});
+});

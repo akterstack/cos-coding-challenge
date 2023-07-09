@@ -1,15 +1,10 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended"
-  ],
-  "jsRules": {
-  },
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
   "rules": {
     "max-line-length": {
-      "options": [
-        160
-      ]
+      "options": [160]
     },
     "member-ordering": [
       true,
@@ -22,14 +17,8 @@
         ]
       }
     ],
-    "member-access": [
-      true,
-      "check-constructor"
-    ],
-    "quotemark": [
-      false,
-      "single"
-    ],
+    "member-access": [true, "check-constructor"],
+    "quotemark": [false, "single"],
     "new-parens": true,
     "no-arg": true,
     "no-bitwise": true,

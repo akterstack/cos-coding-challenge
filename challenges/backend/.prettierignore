@@ -1,0 +1,8 @@
+.history/
+.github/
+node_modules/
+
+*.d.ts
+*.js
+.prettierrc.json
+README.md
