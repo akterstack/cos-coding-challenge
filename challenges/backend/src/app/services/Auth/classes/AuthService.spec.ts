@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
 import { IAuthService } from '../interface/IAuthService';
 import { DependencyIdentifier } from '../../../DependencyIdentifiers';
-import { container } from '../../../main';
+import container from '../../../container';
 
 chai.use(chaiAsPromised);
 
