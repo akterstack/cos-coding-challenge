@@ -28,7 +28,7 @@ const generateStubAuctions = (total: number) => {
 
 const stubFetchAuction = (total: number, limit: number) => {
   const stubFetchAuction = sinon.stub(carOnSaleClient, 'fetchAuction');
-
+  const stubActions: Auction[] = [];
   // Stubbing pagination with multiple api calls
   [...Array(Math.ceil(total / limit)).keys()].forEach((idx) => {
     const items = generateStubAuctions(total < limit ? total : limit);
@@ -37,15 +37,19 @@ const stubFetchAuction = (total: number, limit: number) => {
       total,
       items,
     });
+
+    stubActions.push(...items);
   });
+
+  return stubActions;
 };
 
 describe('CarOnSaleClient', () => {
-  describe('#getAllAuctions()', () => {
-    afterEach(() => {
-      sinon.restore();
-    });
+  afterEach(() => {
+    sinon.restore();
+  });
 
+  describe('#getAllAuctions()', () => {
     it('should throw error if env.USERNAME is missing.', async () => {
       const username = process.env.USERNAME;
       process.env.USERNAME = '';
@@ -87,6 +91,18 @@ describe('CarOnSaleClient', () => {
       await expect(
         carOnSaleClient.getAllAuctions()
       ).to.be.eventually.has.property('length', total);
+    });
+  });
+
+  describe('#getRunningAuctions', () => {
+    it('should return only active auctions', async () => {
+      const stubAuctions = stubFetchAuction(10, 10);
+      const stubRunningAuctions = stubAuctions.filter(
+        (a) => a.state === AuctionState.ACTIVE
+      );
+      await expect(
+        carOnSaleClient.getRunningAuctions()
+      ).to.be.eventually.lengthOf(stubRunningAuctions.length);
     });
   });
 });
