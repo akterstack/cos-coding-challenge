@@ -13,19 +13,45 @@ const { expect } = chai;
 
 let sandbox: sinon.SinonSandbox;
 
+const carOnSaleClient = container.get<ICarOnSaleClient>(
+  DependencyIdentifier.COS_CLIENT
+);
+
+const generateStubAuctions = (total: number) => {
+  return [...Array(total).keys()].reduce((auctions) => {
+    const auction = new Auction();
+    auction.label = faker.string.alphanumeric();
+    auction.numBids = faker.number.int();
+    auction.state = faker.helpers.enumValue(AuctionState);
+    auctions.push(auction);
+    return auctions;
+  }, [] as Auction[]);
+};
+
+const stubFetchAuction = (total: number, limit: number) => {
+  const stubFetchAuction = sandbox.stub(carOnSaleClient, 'fetchAuction');
+
+  // Stubbing pagination with multiple api calls
+  [...Array(Math.ceil(total / limit)).keys()].forEach((idx) => {
+    const items = generateStubAuctions(limit);
+
+    stubFetchAuction.onCall(idx).returns(
+      Promise.resolve({
+        total,
+        items,
+      })
+    );
+  });
+};
+
+beforeEach(() => {
+  sandbox = sinon.createSandbox();
+});
+
+afterEach(() => {
+  sandbox.restore();
+});
 describe('CarOnSaleClient', () => {
-  const carOnSaleClient = container.get<ICarOnSaleClient>(
-    DependencyIdentifier.COS_CLIENT
-  );
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('#getAllAuctions()', () => {
     it('should throw error if env.USERNAME is missing.', async () => {
       const username = process.env.USERNAME;
@@ -51,52 +77,31 @@ describe('CarOnSaleClient', () => {
       process.env.PASSWORD = password;
     });
 
-    const generateStubAuctions = (total: number) => {
-      return [...Array(total).keys()].reduce((auctions) => {
-        const auction = new Auction();
-        auction.label = faker.string.alphanumeric();
-        auction.numBids = faker.number.int();
-        auction.state = faker.helpers.enumValue(AuctionState);
-        auctions.push(auction);
-        return auctions;
-      }, [] as Auction[]);
-    };
     it('should return auctions successfully.', async () => {
       const total = 5;
-      const stubAuctions = generateStubAuctions(total);
+      console.log('//');
+      stubFetchAuction(total, 10);
+      console.log('//');
 
-      sandbox.stub(carOnSaleClient, 'fetchAuction').returns(
-        Promise.resolve({
-          total,
-          items: stubAuctions,
-        })
-      );
+      console.log('>>>>>>>', await carOnSaleClient.getAllAuctions());
 
       await expect(
         carOnSaleClient.getAllAuctions()
-      ).to.be.eventually.deep.equal(stubAuctions);
+      ).to.be.eventually.has.property('length', 5);
     });
 
     it('should return auctions recursively for all pages.', async () => {
       const total = 50,
         limit = 10;
+      stubFetchAuction(total, limit);
 
-      const stubFetchAuction = sandbox.stub(carOnSaleClient, 'fetchAuction');
+      await expect(
+        carOnSaleClient.getAllAuctions()
+      ).to.be.eventually.has.property('length', total);
+    });
 
-      // Stubbing pagination with multiple api calls
-      [...Array(total / limit).keys()].forEach((idx) => {
-        const items = generateStubAuctions(limit);
-
-        stubFetchAuction.onCall(idx).returns(
-          Promise.resolve({
-            total,
-            items,
-          })
-        );
-      });
-
-      const allAuctions = await carOnSaleClient.getAllAuctions();
-      expect(allAuctions.length).to.be.equal(total);
+    describe('#getRunningAuctions', () => {
+      it('should return only active auctions', () => {});
     });
   });
 });

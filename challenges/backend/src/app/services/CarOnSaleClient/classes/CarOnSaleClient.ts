@@ -41,7 +41,9 @@ export class CarOnSaleClient implements ICarOnSaleClient {
     let offset = 0;
     while (hasAuction) {
       const { items, total } = await this.fetchAuction(authCred, offset);
+      console.log(items);
       auctions.push(...items);
+
       hasAuction = auctions.length < total;
       offset += total;
     }
