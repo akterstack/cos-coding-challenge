@@ -33,7 +33,7 @@ const generateStubAuctions = (total: number) => {
   }, [] as Auction[]);
 };
 
-const stubFetchAuction = (total: number, limit: number) => {
+const stubFetchAuction = (total: number, limit: number = 10) => {
   const stubFetchAuction = sinon.stub(carOnSaleClient, 'fetchAuctions');
   const stubActions: Auction[] = [];
   // Stubbing pagination with multiple api calls
@@ -103,8 +103,8 @@ describe('AuctionService', () => {
 
   describe('#getRunningAuctions', () => {
     it('should return only active auctions', async () => {
-      const stubAuctions = stubFetchAuction(10, 10);
-      const stubRunningAuctions = stubAuctions.filter(
+      const givenStubAuctions = stubFetchAuction(10, 10);
+      const stubRunningAuctions = givenStubAuctions.filter(
         (a) => a.state === AuctionState.ACTIVE
       );
       await expect(
@@ -113,5 +113,15 @@ describe('AuctionService', () => {
     });
   });
 
-  describe('#get', () => {});
+  describe('#getAverageNumOfBids', () => {
+    it('should set numOfBids zero before calculating average.', () => {
+      const total = 2;
+      const givenStubAuctions = stubFetchAuction(total);
+      givenStubAuctions[0].numBids = undefined;
+      const expectedAvg = givenStubAuctions[1].numBids! / total;
+      expect(auctionService.getAverageNumOfBids(givenStubAuctions)).to.be.equal(
+        expectedAvg
+      );
+    });
+  });
 });

@@ -8,5 +8,5 @@ export class Auction {
   @Transform(({ value }) => AuctionState[value])
   state: AuctionState;
   @Expose()
-  numBids: number;
+  numBids?: number;
 }
