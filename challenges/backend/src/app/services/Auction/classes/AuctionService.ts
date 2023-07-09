@@ -55,7 +55,18 @@ export class AuctionService implements IAuctionService {
     return calcAverage(auctions.map((auction) => auction.numBids || 0));
   }
 
-  getAverageAuctionProgress(): number {
-    throw new Error('Method not implemented.');
+  /**
+   * @param auctions: Auction[]
+   * @returns auctions progress in percent
+   */
+  getAverageAuctionProgress(auctions: Auction[]): number {
+    const progresses = auctions.map((auction) => {
+      if (!auction.currentHighestBidValue || !auction.minimumRequiredAsk) {
+        return 0;
+      }
+      return auction.currentHighestBidValue / auction.minimumRequiredAsk;
+    });
+
+    return Number((calcAverage(progresses) * 100).toFixed(2));
   }
 }

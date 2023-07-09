@@ -26,8 +26,10 @@ const generateStubAuctions = (total: number) => {
   return [...Array(total).keys()].reduce((auctions) => {
     const auction = new Auction();
     auction.label = faker.string.alphanumeric();
-    auction.numBids = faker.number.int();
     auction.state = faker.helpers.enumValue(AuctionState);
+    auction.numBids = faker.number.int();
+    auction.minimumRequiredAsk = faker.number.float();
+    auction.currentHighestBidValue = faker.number.float();
     auctions.push(auction);
     return auctions;
   }, [] as Auction[]);
@@ -122,6 +124,29 @@ describe('AuctionService', () => {
       expect(auctionService.getAverageNumOfBids(givenStubAuctions)).to.be.equal(
         expectedAvg
       );
+    });
+  });
+
+  describe('#getAverageAuctionProgress', () => {
+    it('should return 0.00 if there is no running auction.', () => {
+      expect(auctionService.getAverageAuctionProgress([])).to.be.equal(0.0);
+    });
+
+    it('should return correct progress in percentage.', () => {
+      const total = 2;
+      const [givenStubAuction1, givenStubAuction2] = stubFetchAuction(total);
+      givenStubAuction1.currentHighestBidValue = 50;
+      givenStubAuction1.minimumRequiredAsk = 100;
+
+      givenStubAuction2.currentHighestBidValue = 60;
+      givenStubAuction2.minimumRequiredAsk = 100;
+
+      expect(
+        auctionService.getAverageAuctionProgress([
+          givenStubAuction1,
+          givenStubAuction2,
+        ])
+      ).to.be.equal(55);
     });
   });
 });
