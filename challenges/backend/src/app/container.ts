@@ -7,8 +7,8 @@ import { CarOnSaleClient } from './services/CarOnSaleClient/classes/CarOnSaleCli
 import { ICarOnSaleClient } from './services/CarOnSaleClient/interface/ICarOnSaleClient';
 import { Logger } from './services/Logger/classes/Logger';
 import { ILogger } from './services/Logger/interface/ILogger';
-import { IAuctionService } from './services/AuctionsInsight/interface/IAuctionService';
-import { AuctionService } from './services/AuctionsInsight/classes/AuctionService';
+import { IAuctionService } from './services/Auction/interface/IAuctionService';
+import { AuctionService } from './services/Auction/classes/AuctionService';
 
 /*
  * Create the DI container.

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ILogger } from './services/Logger/interface/ILogger';
 import { DependencyIdentifier } from './DependencyIdentifiers';
-import { IAuctionService } from './services/AuctionsInsight/interface/IAuctionService';
+import { IAuctionService } from './services/Auction/interface/IAuctionService';
 
 @injectable()
 export class AuctionMonitorApp {
