@@ -50,15 +50,11 @@ export class AuctionService implements IAuctionService {
     );
   }
 
-  getNumOfAuctions(auctions: Auction[]) {
-    return auctions.length;
-  }
-
-  averageNumOfBids(): number {
+  getAverageNumOfBids(): number {
     throw new Error('Method not implemented.');
   }
 
-  averageAuctionProgress(): number {
+  getAverageAuctionProgress(): number {
     throw new Error('Method not implemented.');
   }
 }

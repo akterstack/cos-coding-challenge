@@ -113,5 +113,5 @@ describe('AuctionService', () => {
     });
   });
 
-  describe('#getNumOfAuctions', () => {});
+  describe('#get', () => {});
 });

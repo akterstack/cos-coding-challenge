@@ -5,9 +5,7 @@ export interface IAuctionService {
 
   findRunningAuctions(): Promise<Auction[]>;
 
-  getNumOfAuctions(auctions: Auction[]): number;
+  getAverageNumOfBids(auctions: Auction[]): number;
 
-  averageNumOfBids(auctions: Auction[]): number;
-
-  averageAuctionProgress(auctions: Auction[]): number;
+  getAverageAuctionProgress(auctions: Auction[]): number;
 }
