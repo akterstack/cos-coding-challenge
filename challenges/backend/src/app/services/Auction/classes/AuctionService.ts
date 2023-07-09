@@ -46,9 +46,9 @@ export class AuctionService implements IAuctionService {
   }
 
   async findRunningAuctions(): Promise<Auction[]> {
-    return (await this.findAllAuctions()).filter(
-      (auc) => auc.state === AuctionState.ACTIVE
-    );
+    return (await this.findAllAuctions()).filter((auction) => {
+      return auction.state === AuctionState.ACTIVE;
+    });
   }
 
   getAverageNumOfBids(auctions: Auction[]): number {

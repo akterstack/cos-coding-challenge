@@ -105,13 +105,12 @@ describe('AuctionService', () => {
 
   describe('#getRunningAuctions', () => {
     it('should return only active auctions', async () => {
-      const givenStubAuctions = stubFetchAuction(10, 10);
-      const stubRunningAuctions = givenStubAuctions.filter(
-        (a) => a.state === AuctionState.ACTIVE
-      );
+      const givenStubAuctions = stubFetchAuction(2);
+      givenStubAuctions[0].state = 1;
+      givenStubAuctions[1].state = 2;
       await expect(
         auctionService.findRunningAuctions()
-      ).to.be.eventually.lengthOf(stubRunningAuctions.length);
+      ).to.be.eventually.lengthOf(1);
     });
   });
 

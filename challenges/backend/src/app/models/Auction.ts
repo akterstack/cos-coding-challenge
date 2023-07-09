@@ -1,4 +1,4 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { AuctionState } from './AuctionState';
 
 export class Auction {
@@ -6,7 +6,6 @@ export class Auction {
   label: string;
 
   @Expose()
-  @Transform(({ value }) => AuctionState[value])
   state: AuctionState;
 
   @Expose()
