@@ -15,7 +15,7 @@ export class AuctionService implements IAuctionService {
     private carOnSaleClient: ICarOnSaleClient
   ) {}
 
-  async getAllAuctions(): Promise<Auction[]> {
+  async findAllAuctions(): Promise<Auction[]> {
     const username = process.env.USERNAME;
     const password = process.env.PASSWORD;
 
@@ -44,8 +44,8 @@ export class AuctionService implements IAuctionService {
     return auctions;
   }
 
-  async getRunningAuctions(): Promise<Auction[]> {
-    return (await this.getAllAuctions()).filter(
+  async findRunningAuctions(): Promise<Auction[]> {
+    return (await this.findAllAuctions()).filter(
       (auc) => auc.state === AuctionState.ACTIVE
     );
   }

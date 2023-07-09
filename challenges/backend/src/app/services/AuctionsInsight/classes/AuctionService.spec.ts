@@ -61,7 +61,7 @@ describe('AuctionService', () => {
       const username = process.env.USERNAME;
       process.env.USERNAME = '';
       await expect(
-        auctionService.getAllAuctions()
+        auctionService.findAllAuctions()
       ).to.be.eventually.rejected.and.has.property(
         'message',
         'Environment variable missing: USERNAME'
@@ -73,7 +73,7 @@ describe('AuctionService', () => {
       const password = process.env.PASSWORD;
       process.env.PASSWORD = '';
       await expect(
-        auctionService.getAllAuctions()
+        auctionService.findAllAuctions()
       ).to.be.eventually.rejected.and.has.property(
         'message',
         'Environment variable missing: PASSWORD'
@@ -86,7 +86,7 @@ describe('AuctionService', () => {
       stubFetchAuction(total, 10);
 
       await expect(
-        auctionService.getAllAuctions()
+        auctionService.findAllAuctions()
       ).to.be.eventually.has.property('length', 5);
     });
 
@@ -96,7 +96,7 @@ describe('AuctionService', () => {
       stubFetchAuction(total, limit);
 
       await expect(
-        auctionService.getAllAuctions()
+        auctionService.findAllAuctions()
       ).to.be.eventually.has.property('length', total);
     });
   });
@@ -108,7 +108,7 @@ describe('AuctionService', () => {
         (a) => a.state === AuctionState.ACTIVE
       );
       await expect(
-        auctionService.getRunningAuctions()
+        auctionService.findRunningAuctions()
       ).to.be.eventually.lengthOf(stubRunningAuctions.length);
     });
   });

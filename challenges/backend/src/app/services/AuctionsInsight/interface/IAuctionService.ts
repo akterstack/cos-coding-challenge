@@ -1,9 +1,9 @@
 import { Auction } from '../../../models/Auction';
 
 export interface IAuctionService {
-  getAllAuctions(): Promise<Auction[]>;
+  findAllAuctions(): Promise<Auction[]>;
 
-  getRunningAuctions(): Promise<Auction[]>;
+  findRunningAuctions(): Promise<Auction[]>;
 
   getNumOfAuctions(auctions: Auction[]): number;
 
