@@ -5,6 +5,7 @@ import { DependencyIdentifier } from '../../../DependencyIdentifiers';
 import { AuctionState } from '../../../models/AuctionState';
 import { IAuthService } from '../../Auth/interface/IAuthService';
 import { ICarOnSaleClient } from '../../CarOnSaleClient/interface/ICarOnSaleClient';
+import { calcAverage } from '../../../helpers/utils';
 
 @injectable()
 export class AuctionService implements IAuctionService {
@@ -50,8 +51,8 @@ export class AuctionService implements IAuctionService {
     );
   }
 
-  getAverageNumOfBids(): number {
-    throw new Error('Method not implemented.');
+  getAverageNumOfBids(auctions: Auction[]): number {
+    return calcAverage(auctions.map((auction) => auction.numBids || 0));
   }
 
   getAverageAuctionProgress(): number {
