@@ -7,6 +7,8 @@ import { CarOnSaleClient } from './services/CarOnSaleClient/classes/CarOnSaleCli
 import { ICarOnSaleClient } from './services/CarOnSaleClient/interface/ICarOnSaleClient';
 import { Logger } from './services/Logger/classes/Logger';
 import { ILogger } from './services/Logger/interface/ILogger';
+import { IAuctionService } from './services/AuctionsInsight/interface/IAuctionService';
+import { AuctionService } from './services/AuctionsInsight/classes/AuctionService';
 
 /*
  * Create the DI container.
@@ -23,5 +25,8 @@ container.bind<IAuthService>(DependencyIdentifier.AUTH_SERVICE).to(AuthService);
 container
   .bind<ICarOnSaleClient>(DependencyIdentifier.COS_CLIENT)
   .to(CarOnSaleClient);
+container
+  .bind<IAuctionService>(DependencyIdentifier.AUCTION_SERVICE)
+  .to(AuctionService);
 
 export default container;
