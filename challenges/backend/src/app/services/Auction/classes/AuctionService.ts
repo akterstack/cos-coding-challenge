@@ -35,13 +35,19 @@ export class AuctionService implements IAuctionService {
     const auctions: Auction[] = [];
     let hasAuction = true;
     let offset = 0;
+    /**
+     * I applied paginated fetching assuming that we could have hundreds of auctions.
+     * TODO: Improve auction fetch pagination
+     * Now fetching with pagination is sequential. To make it concurrent, apply following steps:
+     * - fetch count of all ACTIVE auctions
+     * - fetch ACTIVE auctions concurrently using Promise.all([...fetchers()])
+     */
     while (hasAuction) {
       const { items, total } = await this.carOnSaleClient.fetchAuctions(
         authCred,
         offset
       );
       auctions.push(...items);
-      console.log(items);
 
       offset += items.length;
       this.logger.debug(`Items fetched: ${offset}/${total}`);
@@ -52,6 +58,13 @@ export class AuctionService implements IAuctionService {
   }
 
   async findRunningAuctions(): Promise<Auction[]> {
+    /**
+     * Instead of fetching all auctions and filter them in memory,
+     * it would be nice to fetch using IAuctionFilter.states params.
+     * Unfortunately I couldn't manage the exact value type from swagger API doc.
+     * I found `IAuctionFilter.states: { undefined	boolean }`, which was
+     * unreadable to me.
+     */
     return (await this.findAllAuctions()).filter((auction) => {
       return auction.state === AuctionState.ACTIVE;
     });
