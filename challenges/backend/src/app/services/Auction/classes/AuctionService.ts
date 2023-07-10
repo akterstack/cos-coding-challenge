@@ -6,10 +6,13 @@ import { AuctionState } from '../../../models/AuctionState';
 import { IAuthService } from '../../Auth/interface/IAuthService';
 import { ICarOnSaleClient } from '../../CarOnSaleClient/interface/ICarOnSaleClient';
 import { calcAverage } from '../../../helpers/utils';
+import { ILogger } from '../../Logger/interface/ILogger';
 
 @injectable()
 export class AuctionService implements IAuctionService {
   constructor(
+    @inject(DependencyIdentifier.LOGGER)
+    private logger: ILogger,
     @inject(DependencyIdentifier.AUTH_SERVICE)
     private authService: IAuthService,
     @inject(DependencyIdentifier.COS_CLIENT)
@@ -38,7 +41,10 @@ export class AuctionService implements IAuctionService {
         offset
       );
       auctions.push(...items);
+      console.log(items);
+
       offset += items.length;
+      this.logger.debug(`Items fetched: ${offset}/${total}`);
       hasAuction = offset < total;
     }
 
