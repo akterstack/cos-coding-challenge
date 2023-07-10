@@ -43,15 +43,22 @@ export class AuctionService implements IAuctionService {
      * - fetch ACTIVE auctions concurrently using Promise.all([...fetchers()])
      */
     while (hasAuction) {
-      const { items, total } = await this.carOnSaleClient.fetchAuctions(
-        authCred,
-        offset
-      );
-      auctions.push(...items);
+      try {
+        const { items, total } = await this.carOnSaleClient.fetchAuctions(
+          authCred,
+          offset
+        );
+        auctions.push(...items);
 
-      offset += items.length;
-      this.logger.debug(`Items fetched: ${offset}/${total}`);
-      hasAuction = offset < total;
+        offset += items.length;
+        this.logger.debug(`Items fetched: ${offset}/${total}`);
+        hasAuction = offset < total;
+      } catch (e) {
+        this.logger.debug(
+          `Error fetching auctions (offset: ${offset}). Retrying...`
+        );
+        hasAuction = true;
+      }
     }
 
     return auctions;
