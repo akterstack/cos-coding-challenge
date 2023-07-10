@@ -38,8 +38,8 @@ export class AuctionService implements IAuctionService {
         offset
       );
       auctions.push(...items);
-      hasAuction = auctions.length < total;
-      offset += total;
+      offset += items.length;
+      hasAuction = offset < total;
     }
 
     return auctions;
@@ -52,7 +52,9 @@ export class AuctionService implements IAuctionService {
   }
 
   getAverageNumOfBids(auctions: Auction[]): number {
-    return calcAverage(auctions.map((auction) => auction.numBids || 0));
+    return Math.round(
+      calcAverage(auctions.map((auction) => auction.numBids || 0))
+    );
   }
 
   /**
